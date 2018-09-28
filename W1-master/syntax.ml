@@ -1,4 +1,4 @@
-type t = (* MinCaml¤Î¹½Ê¸¤òÉ½¸½¤¹¤ë¥Ç¡¼¥¿·¿ (caml2html: syntax_t) *)
+type t = (* MinCamlã®æ§‹æ–‡ã‚’è¡¨ç¾ã™ã‚‹ãƒ‡ãƒ¼ã‚¿åž‹ (caml2html: syntax_t) *)
   | Unit
   | Bool of bool
   | Int of int
@@ -44,16 +44,13 @@ and print_list l =
 and print_expr e =
     match e with
     | Unit _ -> print_string "UNIT"
-    | Bool (b, _) -> (print_string "BOOL ";
+    | Bool b -> (print_string "BOOL ";
                       print_string (string_of_bool b))
-    | Int (i, _) -> (print_string "INT ";
+    | Int i -> (print_string "INT ";
                      print_int i)
-    | Float (f, _) -> (print_string "FLOAT ";
+    | Float f -> (print_string "FLOAT ";
                        print_string (string_of_float f))
     | Not n -> (print_string "NOT (";
-                print_expr n;
-                print_string ")")
-    | Rev n | RevBool n | RevInt n | RevFloat n -> (print_string "REV (";
                 print_expr n;
                 print_string ")")
     | Neg n -> (print_string "NEG (";
@@ -65,16 +62,6 @@ and print_expr e =
                      print_expr b;
                      print_string ")")
     | Sub (a, b) -> (print_string "SUB (";
-                     print_expr a;
-                     print_string ", ";
-                     print_expr b;
-                     print_string ")")
-    | Mul (a, b) -> (print_string "MUL (";
-                     print_expr a;
-                     print_string ", ";
-                     print_expr b;
-                     print_string ")")
-    | Div (a, b) -> (print_string "DIV (";
                      print_expr a;
                      print_string ", ";
                      print_expr b;
@@ -128,7 +115,7 @@ and print_expr e =
              print_string ", ";
              print_expr d;
              print_string ")")
-    | Var (v, _) -> (print_string "VAR ";
+    | Var v -> (print_string "VAR ";
                      print_string v)
     | LetRec (f, t) -> (print_string "LETREC (";
                         print_fundef f;
