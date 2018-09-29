@@ -43,7 +43,7 @@ and print_list l =
 
 and print_expr e =
     match e with
-    | Unit _ -> print_string "UNIT"
+    | Unit  -> print_string "UNIT"
     | Bool b -> (print_string "BOOL ";
                       print_string (string_of_bool b))
     | Int i -> (print_string "INT ";
