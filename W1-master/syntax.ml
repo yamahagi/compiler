@@ -30,114 +30,121 @@ let rec print_list_pair l =
     match l with
     | [] -> print_string " "
     | (a, b) :: xs -> (print_string a;
-                       print_string " ";
+			print_string " ";
                        Type.print_type b;
-                       print_string ", ";
                        print_list_pair xs)
 and print_list l =
     match l with
-    | [] -> print_string " "
+    | [] -> print_string ""
     | x :: xs -> (print_expr x;
-                  print_string ", ";
                   print_list xs)
 
 and print_expr e =
     match e with
-    | Unit  -> print_string "UNIT"
+    | Unit  -> print_string "UNIT";
+		print_newline()
     | Bool b -> (print_string "BOOL ";
-                      print_string (string_of_bool b))
+                print_string (string_of_bool b);
+		print_newline())
     | Int i -> (print_string "INT ";
-                     print_int i)
+                print_int i;
+		print_newline()
+		)
     | Float f -> (print_string "FLOAT ";
-                       print_string (string_of_float f))
-    | Not n -> (print_string "NOT (";
+                  print_string (string_of_float f);
+		  print_newline())
+    | Not n -> (print_string "NOT ";
                 print_expr n;
-                print_string ")")
-    | Neg n -> (print_string "NEG (";
+		)
+    | Neg n -> (print_string "NEG ";
                 print_expr n;
-                print_string ")")
-    | Add (a, b) -> (print_string "ADD (";
+		)
+    | Add (a, b) -> (print_string "ADD ";
+		     print_newline();
                      print_expr a;
-                     print_string ", ";
                      print_expr b;
-                     print_string ")")
-    | Sub (a, b) -> (print_string "SUB (";
+			)
+    | Sub (a, b) -> (print_string "SUB ";
+		     print_newline();
                      print_expr a;
-                     print_string ", ";
                      print_expr b;
-                     print_string ")")
-    | FNeg n -> (print_string "FNEG (";
+		 	)
+    | FNeg n -> (print_string "FNEG ";
                 print_expr n;
-                print_string ")")
-    | FAdd(a, b) -> (print_string "FADD (";
+		)
+    | FAdd(a, b) -> (print_string "FADD ";
+		     print_newline();
                      print_expr a;
-                     print_string ", ";
                      print_expr b;
-                     print_string ")")
-    | FSub(a, b) -> (print_string "FSUB (";
+			)
+    | FSub(a, b) -> (print_string "FSUB ";
+		     print_newline();
                      print_expr a;
-                     print_string ", ";
                      print_expr b;
-                     print_string ")")
-    | FMul(a, b) -> (print_string "FMUL (";
+			)
+    | FMul(a, b) -> (print_string "FMUL ";
+		     print_newline();
                      print_expr a;
-                     print_string ", ";
                      print_expr b;
-                     print_string ")")
-    | FDiv(a, b) -> (print_string "FDIV (";
+			)
+    | FDiv(a, b) -> (print_string "FDIV ";
+		     print_newline();
                      print_expr a;
-                     print_string ", ";
                      print_expr b;
-                     print_string ")")
-    | Eq (a, b) -> (print_string "EQ (";
+			)
+    | Eq (a, b) -> (print_string "EQ ";
+		     print_newline();
                     print_expr a;
-                    print_string ", ";
                     print_expr b;
-                    print_string ")")
-    | LE (a, b) -> (print_string "LE (";
+			)
+    | LE (a, b) -> (print_string "LE ";
+		     print_newline();
                     print_expr a;
-                    print_string ", ";
                     print_expr b;
-                    print_string ")")
+			)
     | If (a, b, c) ->
-            (print_string "IF (";
+            (print_string "IF ";
+		       print_newline();
                        print_expr a;
-                       print_string ", ";
+		       print_string "then ";
                        print_expr b;
-                       print_string ")")
+		       print_string "else ";
+		       print_newline();
+			print_expr c;
+			)
     | Let ((a, b), c, d) ->
-            (print_string "LET (";
+            (print_string "LET ";
+		print_newline();
              print_string a;
-             print_string ", ";
              Type.print_type b;
-             print_string ", ";
              print_expr c;
-             print_string ", ";
              print_expr d;
-             print_string ")")
+		)
     | Var v -> (print_string "VAR ";
-                     print_string v)
-    | LetRec (f, t) -> (print_string "LETREC (";
+                     print_string v;
+		print_newline()
+			)
+    | LetRec (f, t) -> (print_string "LETREC ";
+			print_newline();
                         print_fundef f;
-                        print_string  " ";
+			print_string("in");
+			print_newline();
                         print_expr t;
-                        print_string ")")
-    | App (a, b) -> (print_string "APP (";
+			)
+    | App (a, b) -> (print_string "APP ";
                      print_expr a;
-                     print_string ", ";
                      print_list b;
-                     print_string ")")
-    | Tuple a -> (print_string "TUPLE (";
+			)
+    | Tuple a -> (print_string "TUPLE ";
+		     print_newline();
                   print_list a;
-                  print_string ")")
-    | LetTuple (l, a, b) -> (print_string "LETTUPLE (";
-                             print_string ", ";
+		     print_newline()
+			)
+    | LetTuple (l, a, b) -> (print_string "LETTUPLE ";
                              print_list_pair l;
-                             print_string ", ";
                              print_expr a;
-                             print_string ", ";
                              print_expr b;
-                             print_string ")")
+				)
     | Array (a, b) -> (print_string "ARRAY (";
                        print_expr a;
                        print_string ", ";
@@ -159,4 +166,5 @@ and print_fundef f =
     let (a, b) = f.name in (print_string a; print_string " "; Type.print_type b);
     print_string " ";
     print_list_pair f.args;
+    print_newline();
     print_expr f.body
