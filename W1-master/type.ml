@@ -1,4 +1,4 @@
-type t = (* MinCaml¤Î·¿¤òÉ½¸½¤¹¤ë¥Ç¡¼¥¿·¿ (caml2html: type_t) *)
+type t = (* MinCamlã®åž‹ã‚’è¡¨ç¾ã™ã‚‹ãƒ‡ãƒ¼ã‚¿åž‹ (caml2html: type_t) *)
   | Unit
   | Bool
   | Int
@@ -8,4 +8,22 @@ type t = (* MinCaml¤Î·¿¤òÉ½¸½¤¹¤ë¥Ç¡¼¥¿·¿ (caml2html: type_t) *)
   | Array of t
   | Var of t option ref
 
-let gentyp () = Var(ref None) (* ¿·¤·¤¤·¿ÊÑ¿ô¤òºî¤ë *)
+let gentyp () = Var(ref None) (* æ–°ã—ã„åž‹å¤‰æ•°ã‚’ä½œã‚‹ *)
+
+let rec print_type_list t =
+    match t with
+    | [] -> print_string " "
+    | x :: xs -> print_type x; print_string ", "; print_type_list xs
+
+and print_type t =
+    match t with
+    | Unit -> print_string "UNIT"
+    | Bool -> print_string "BOOL"
+    | Int  -> print_string "INT"
+    | Float-> print_string "FLOAT"
+    | Fun (a, b) -> print_string "FUN "; print_type_list a; print_string "-> "; print_type b
+    | Tuple l -> print_string "TUPLE "; print_type_list l
+    | Array a -> print_string "ARRAY "; print_type a
+    | Var x -> (match !x with
+               | Some a -> print_string "VAR "; print_type a
+               | None -> print_string "VAR NONE")
