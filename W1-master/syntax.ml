@@ -156,7 +156,7 @@ and print_expr e =
                         print_expr c;
                         print_string ")")
 and print_fundef f =
-    let ((a, b), c) = f.name in (print_string a; print_string " "; Type.print_type b);
+    let (a, b) = f.name in (print_string a; print_string " "; Type.print_type b);
     print_string " ";
     print_list_pair f.args;
     print_expr f.body
