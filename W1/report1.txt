@@ -1,0 +1,105 @@
+05-181006 大萩雅也
+
+容量のサイズの都合上、変更があったファイルのみソースコードに載せています。
+他の部分はmin-camlの元のソースコードと全く同じです。
+
+課題1のみやりました。
+
+Lexer.token、Parser.expの結果を
+syntax.mlの29行目から170行目までのprint_exprで表示し、
+
+Typing.f,kNormal.fの結果を
+kNormal.mlの179行目から320行目までのprint_syntaxで表示するように、
+print_exprとprint_syntaxを実装した。
+
+print_exprはmain.mlにおいて15行めから18行めで用いている。
+
+print_expr,print_syntaxはパターンマッチを使い、再帰的に式をprintしていくように
+実装した。
+
+
+実行例
+
+makeしたのち 
+./min-caml test/fib
+を実行することで下のものが出力される。
+expr以下がprint_exprで表示されるもので
+kNormal以下がprint_syntaxで表示されるものである。
+
+
+expr 
+
+LETREC 
+fib VAR NONE  n VAR NONE  
+IF 
+LE 
+VAR n
+INT 1
+then VAR n
+else 
+ADD 
+APP VAR fib
+SUB 
+VAR n
+INT 1
+APP VAR fib
+SUB 
+VAR n
+INT 2
+in
+APP VAR print_int
+APP VAR fib
+INT 30
+
+free variable print_int assumed as external
+
+kNormal
+
+LETREC fib FUN INT,  -> INT n INT   = 
+LET Ti3 INT = Int 1 IN  
+IFLE n Ti3 VAR n
+IN
+LET Ti6 INT = LET Ti5 INT = LET Ti4 INT = Int 1 IN  
+SUB n Ti4
+IN  
+APP fib Ti5  IN  
+LET Ti9 INT = LET Ti8 INT = LET Ti7 INT = Int 2 IN  
+SUB n Ti7
+IN  
+APP fib Ti8  IN  
+Add Ti6 Ti9
+ RECIN
+ LET Ti2 INT = LET Ti1 INT = Int 30 IN  
+APP fib Ti1  IN  
+EXTFUNAPP 
+print_int Ti2  
+iteration 1000
+iteration 999
+directly applying fib.10
+directly applying fib.10
+directly applying fib.10
+eliminating closure(s) fib.10
+register allocation: may take some time (up to a few minutes, depending on the size of functions)
+generating assembly...
+
+考察
+
+print_exprとprint_syntaxの2つを実装し、
+その２つの結果を見比べることで、
+min-caml内のkNormalは、
+例えば 1 + 2 + 3 + 4が
+LET Ti8 INT = 
+LET Ti6 INT = 
+LET Ti4 INT = Int 1 IN  
+LET Ti5 INT = Int 2 IN  
+Add Ti4 Ti5
+IN  
+LET Ti7 INT = Int 3 IN  
+Add Ti6 Ti7
+IN  
+LET Ti9 INT = Int 4 IN  
+Add Ti8 Ti9
+
+計算途中の結果をすべて変数に代入すると同時に計算途中で出てくるすべての整数や浮動小数点も変数に代入していることを知ることができた。
+
+

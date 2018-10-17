@@ -1,0 +1,114 @@
+1.let rec x x=
+2.let x = 
+3.let x = x -(-x) in
+4.x –(let x = -x in x -(-x)) in
+5.x -(-x) in
+6.let x = x 125 in x -(-x)
+
+min-camlの通りにk正規化すると
+6行目の 125をTi1に代入し
+6行めの (-x)をTi2に代入し
+3行目の (-x)をNEG xとして変数Ti3に代入し
+4行めの (-x)をNEG xとして変数Ti4,
+4行めの (let x = -x in x -(-x))をSUB x Ti4として変数Ti5に代入し
+5行目の (-x)をNEG xとしてTi6に代入する
+
+以上がk正規化
+
+それにより、以下のようになる
+1.let rec x x=
+2.let x =
+3.let x = 
+4.let Ti3 = (-x) in
+5.x - Ti3 in
+6.let Ti5  =
+7.let x = (-x) in
+8.let Ti4 = (-x) in
+9.x - Ti4 in
+10.x - Ti5 in
+11.let Ti6  = -x in
+12.x - Ti6 in
+13. let x  =
+14. let Ti1  = 125 in
+15.  x Ti1  in
+16.  let Ti2  =  -x in
+17.   x - Ti2  
+
+これに対して
+1行めの引数xにあたるものをaとして変換
+2行めのxをx1として変換
+3行めのxをx2として変換
+7行めのxをx3として変換
+13行めのxをx4として変換
+
+以上がa変換であり、それにより
+1.let rec x a=
+2.let x1 =
+3.let x2 = 
+4.let Ti3 = (-a) in
+5.a - Ti3 in
+6.let Ti5  =
+7.let x3 = (-x2) in
+8.let Ti4 = (-x3) in
+9.x3 - Ti4 in
+10.x2 - Ti5 in
+11.let Ti6  = NEG x1 in
+12.x1 - Ti6 in
+13. let x4  =
+14. let Ti1  = 125 in
+15.  x Ti1  in
+16.  let Ti2  =  -x4 in
+17.   x4 - Ti2
+
+1.let rec x x=
+2.let x =
+3.let x = x -(-x) in
+4.x –(let x = -x in x -(-x)) in
+5.x -(-x) in
+6.let x = x 125 in x -(-x)
+
+1.let rec x a=
+2.let x1 =
+3.let x2 = a -(-a) in
+4.x2 –(let x3 = -x2 in x3 -(-x3)) in
+5.x1 -(-x1) in
+6.let x4 = x 125 in x4 -(-x4)
+A正規化
+a変換を行わない場合2行目と３行目の入れ替えのみとなる
+
+let rec x x=
+let x = x - (-x) in
+let x =
+x – (let x = -x in x -(-x)) in
+x -(-x) in
+let x = x 125 in x -(-x)
+
+a変換を行った後A正規化を行った場合
+let rec x a = 
+let x2 = a - (-a) in
+let x3 = -x2 in
+let x5 = x3 - (-x3) in
+x2 -x5 in
+x1-(-x1) in
+let x4 = x 125 in x4 -(-x4)
+
+
+
+let rec x x = 
+  let x1  = 
+    let x2  = 
+      let Ti3  = NEG x IN  
+    SUB x Ti3 IN  
+    let Ti5  = 
+      let x3  = NEG x2 IN  
+        let Ti4  = NEG x3 IN  
+    SUB x3 Ti4 IN  
+  SUB x2 Ti5 IN  
+  let Ti6  = NEG x1 IN  
+SUB x1 Ti6
+RECIN
+  let x4  = 
+    let Ti1  = Int 125 IN  
+  APP f Ti1  IN  
+  let Ti2  = NEG x4 IN  
+  SUB x4 Ti2
